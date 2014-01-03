@@ -215,3 +215,5 @@ subtest 'validate message chained method' => sub {
 	};
 	like ($@->message, qr/四文字以上五文字以内で入力してください/);
 };
+
+done_testing;
