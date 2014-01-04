@@ -13,7 +13,7 @@ sub new {
 sub check {
 	my ($self, $str, $msg) = @_;
 
-	$self->{str} = $str || '';
+	$self->{str} = $str // '';
 	if (ref $msg) {
 		$self->{msgs} = $msg;
 		$self->{msg} = undef;
@@ -45,7 +45,7 @@ sub isAlpha {
 	my $self = shift;
 
 	unless ($self->{str} =~ /^[a-zA-Z]+$/) {
-		$self->error($self->{msgs}->{isAlpha} || $self->{msg} || 'Invalid characters');
+		$self->error($self->{msgs}->{isAlpha} // $self->{msg} // 'Invalid characters');
 	}
 	return $self;
 }
@@ -54,7 +54,7 @@ sub isAlphanumeric {
 	my $self = shift;
 
 	unless ($self->{str} =~ /^[a-zA-Z0-9]+$/) {
-		$self->error($self->{msgs}->{isAlphanumeric} || $self->{msg} || 'Invalid characters');
+		$self->error($self->{msgs}->{isAlphanumeric} // $self->{msg} // 'Invalid characters');
 	}
 	return $self;
 }
@@ -63,7 +63,7 @@ sub isNumeric {
 	my $self = shift;
 
 	unless ($self->{str} =~ /^[0-9]+$/) {
-		$self->error($self->{msgs}->{isNumeric} || $self->{msg} || 'Invalid number');
+		$self->error($self->{msgs}->{isNumeric} // $self->{msg} // 'Invalid number');
 	}
 	return $self;
 }
@@ -72,7 +72,7 @@ sub notNull {
 	my $self = shift;
 
 	if ($self->{str} eq '') {
-		$self->error($self->{msgs}->{notNull} || $self->{msg} || 'String is empty');
+		$self->error($self->{msgs}->{notNull} // $self->{msg} // 'String is empty');
 	}
 	return $self;
 }
@@ -81,7 +81,7 @@ sub isNull {
 	my $self = shift;
 
 	unless ($self->{str} eq '') {
-		$self->error($self->{msgs}->{isNull} || $self->{msg} || 'String is not empty');
+		$self->error($self->{msgs}->{isNull} // $self->{msg} // 'String is not empty');
 	}
 	return $self;
 }
@@ -90,7 +90,7 @@ sub notEmpty {
 	my $self = shift;
 
 	if ($self->{str} =~ /^[\s\t\r\n]*$/) {
-		$self->error($self->{msgs}->{notEmpty} || $self->{msg} || 'String is whitespace');
+		$self->error($self->{msgs}->{notEmpty} // $self->{msg} // 'String is whitespace');
 	}
 	return $self;
 }
@@ -99,7 +99,7 @@ sub equals {
 	my ($self, $equals) = @_;
 
 	unless ($self->{str} eq $equals) {
-		$self->error($self->{msgs}->{equals} || $self->{msg} || 'Not equal');
+		$self->error($self->{msgs}->{equals} // $self->{msg} // 'Not equal');
 	}
 	return $self;
 }
@@ -108,7 +108,7 @@ sub containes {
 	my ($self, $pattern) = @_;
 
 	unless ($self->{str} =~ /$pattern/) {
-		$self->error($self->{msgs}->{containes} || $self->{msg} || 'Invalid characters');
+		$self->error($self->{msgs}->{containes} // $self->{msg} // 'Invalid characters');
 	}
 	return $self;
 }
@@ -118,10 +118,10 @@ sub byteLen {
 
 	my $length = length $self->{str};
 	if ($length < $min) {
-		$self->error($self->{msgs}->{byteLen} || $self->{msg} || 'String is too small');
+		$self->error($self->{msgs}->{byteLen} // $self->{msg} // 'String is too small');
 	}
 	if (defined $max && $length > $max) {
-		$self->error($self->{msgs}->{byteLen} || $self->{msg} || 'String is too large');
+		$self->error($self->{msgs}->{byteLen} // $self->{msg} // 'String is too large');
 	}
 	return $self;
 }
@@ -131,10 +131,10 @@ sub len {
 
 	my $length = length decode_utf8($self->{str});
 	if ($length < $min) {
-		$self->error($self->{msgs}->{len} || $self->{msg} || 'String is too small');
+		$self->error($self->{msgs}->{len} // $self->{msg} // 'String is too small');
 	}
 	if (defined $max && $length > $max) {
-		$self->error($self->{msgs}->{len} || $self->{msg} || 'String is too large');
+		$self->error($self->{msgs}->{len} // $self->{msg} // 'String is too large');
 	}
 	return $self;
 }
@@ -144,15 +144,15 @@ sub isDate {
 
 	my $str = $self->_fixDate($self->{str});
 	unless ($str =~ /^\d{8}$/) {
-		$self->error($self->{msgs}->{isDate} || $self->{msg} || 'Not a date');
+		$self->error($self->{msgs}->{isDate} // $self->{msg} // 'Not a date');
 	}
 	eval {
 		unless ($str eq Time::Piece->strptime($str, '%Y%m%d')->strftime('%Y%m%d')) {
-			$self->error($self->{msgs}->{isDate} || $self->{msg} || 'Not a date');
+			$self->error($self->{msgs}->{isDate} // $self->{msg} // 'Not a date');
 		}
 	};
 	if ($@) {
-		$self->error($self->{msgs}->{isDate} || $self->{msg} || 'Not a date');
+		$self->error($self->{msgs}->{isDate} // $self->{msg} // 'Not a date');
 	}
 	return $self;
 }
@@ -165,7 +165,7 @@ sub isAfter {
 	$compDate = $self->_fixDate($compDate);
 
 	unless ($origDate >= $compDate) {
-		$self->error($self->{msgs}->{isAfter} || $self->{msg} || 'Invalid date');
+		$self->error($self->{msgs}->{isAfter} // $self->{msg} // 'Invalid date');
 	}
 	return $self;
 }
@@ -178,7 +178,7 @@ sub isBefore {
 	$compDate = $self->_fixDate($compDate);
 
 	unless ($origDate <= $compDate) {
-		$self->error($self->{msgs}->{isBefore} || $self->{msg} || 'Invalid date');
+		$self->error($self->{msgs}->{isBefore} // $self->{msg} // 'Invalid date');
 	}
 	return $self;
 }
