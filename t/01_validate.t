@@ -8,11 +8,11 @@ my $v = Validator::Chained->new;
 subtest 'validate isAlpha' => sub {
 	subtest 'success' => sub {
 		eval { $v->check('abc')->isAlpha; };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->check('ABC')->isAlpha; };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->check('abcABC')->isAlpha; };
-		ok (!$@);
+		ok ($@ == '');
 	};
 	subtest 'failure' => sub {
 		eval { $v->check('123')->isAlpha; };
@@ -29,15 +29,15 @@ subtest 'validate isAlpha' => sub {
 subtest 'validate isAlphanumeric' => sub {
 	subtest 'success' => sub {
 		eval { $v->check('abc')->isAlphanumeric; };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->check('ABC')->isAlphanumeric; };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->check('abcABC')->isAlphanumeric; };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->check('123')->isAlphanumeric; };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->check('abc123')->isAlphanumeric; };
-		ok (!$@);
+		ok ($@ == '');
 	};
 	subtest 'failure' => sub {
 		eval { $v->check('-()%"!?~=|{}')->isAlphanumeric; };
@@ -50,7 +50,7 @@ subtest 'validate isAlphanumeric' => sub {
 subtest 'validate isNumeric' => sub {
 	subtest 'success' => sub {
 		eval { $v->check('123')->isNumeric; };
-		ok (!$@);
+		ok ($@ == '');
 	};
 	subtest 'failure' => sub {
 		eval { $v->check('abc123')->isNumeric; };
@@ -65,7 +65,7 @@ subtest 'validate isNumeric' => sub {
 subtest 'validate notNull' => sub {
 	subtest 'success' => sub {
 		eval { $v->check('aaa')->notNull; };
-		ok (!$@);
+		ok ($@ == '');
 	};
 	subtest 'failure' => sub {
 		eval { $v->check()->notNull; };
@@ -78,7 +78,7 @@ subtest 'validate notNull' => sub {
 subtest 'validate isNull' => sub {
 	subtest 'success' => sub {
 		eval { $v->check()->isNull; };
-		ok (!$@);
+		ok ($@ == '');
 	};
 	subtest 'failure' => sub {
 		eval { $v->check('aaa')->isNull; };
@@ -89,9 +89,9 @@ subtest 'validate isNull' => sub {
 subtest 'validate notEmpty' => sub {
 	subtest 'success' => sub {
 		eval { $v->check('aaa')->notEmpty; };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->check("aaa\n\r\t\s")->notEmpty; };
-		ok (!$@);
+		ok ($@ == '');
 	};
 	subtest 'failure' => sub {
 		eval { $v->check('    ')->notEmpty; };
@@ -105,7 +105,7 @@ subtest 'validate equals' => sub {
 	$v->check('aaa');
 	subtest 'success' => sub {
 		eval { $v->equals('aaa'); };
-		ok (!$@);
+		ok ($@ == '');
 	};
 	subtest 'failure' => sub {
 		eval { $v->equals('bbb'); };
@@ -117,11 +117,11 @@ subtest 'validate containes' => sub {
 	$v->check('aaa');
 	subtest 'success' => sub {
 		eval { $v->containes('a'); };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->containes('aa'); };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->containes('aaa'); };
-		ok (!$@);
+		ok ($@ == '');
 	};
 	subtest 'failure' => sub {
 		eval { $v->containes('b'); };
@@ -135,11 +135,11 @@ subtest 'validator byteLen' => sub {
 	$v->check('あいう');
 	subtest 'success' => sub {
 		eval { $v->byteLen(3); };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->byteLen(3, 9); };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->byteLen(9, 9); };
-		ok (!$@);
+		ok ($@ == '');
 	};
 	subtest 'failure' => sub {
 		eval { $v->byteLen(10); };
@@ -155,11 +155,11 @@ subtest 'validate len' => sub {
 	$v->check('abc');
 	subtest 'success' => sub {
 		eval { $v->len(3); };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->len(3, 4); };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->len(3, 3); };
-		ok (!$@);
+		ok ($@ == '');
 	};
 	subtest 'failure' => sub {
 		eval { $v->len(4); };
@@ -174,11 +174,11 @@ subtest 'validate len' => sub {
 subtest 'validate isDate' => sub {
 	subtest 'success' => sub {
 		eval { $v->check('20140101')->isDate; };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->check('2014/01/01')->isDate; };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->check('2014-01-01')->isDate; };
-		ok (!$@);
+		ok ($@ == '');
 	};
 	subtest 'failure' => sub {
 		eval { $v->check('20140000')->isDate; };
@@ -197,13 +197,13 @@ subtest 'validate isDate' => sub {
 subtest 'validate isAfter' => sub {
 	subtest 'success' => sub {
 		eval { $v->check('20140101')->isAfter('20140101'); };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->check('20140101')->isAfter('20131228'); };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->check('2014/01/01')->isAfter('2013/12/28'); };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->check('2014-01-01')->isAfter('2013-12-28'); };
-		ok (!$@);
+		ok ($@ == '');
 	};
 	subtest 'failure' => sub {
 		eval { $v->check('20140101')->isAfter('20140102'); };
@@ -218,13 +218,13 @@ subtest 'validate isAfter' => sub {
 subtest 'validate isBefore' => sub {
 	subtest 'success' => sub {
 		eval { $v->check('20140101')->isBefore('20140101'); };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->check('20140101')->isBefore('20140102'); };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->check('2014/01/01')->isBefore('2014/01/02'); };
-		ok (!$@);
+		ok ($@ == '');
 		eval { $v->check('2014-01-01')->isBefore('2014-01-02'); };
-		ok (!$@);
+		ok ($@ == '');
 	};
 	subtest 'failure' => sub {
 		eval { $v->check('20140101')->isBefore('20131228'); };

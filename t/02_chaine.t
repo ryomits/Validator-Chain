@@ -9,10 +9,10 @@ subtest 'validate chained' => sub {
 	subtest 'success' => sub {
 		$v->check('   aaa   ');
 		eval { $v->trim->isAlpha->isAlphanumeric; };
-		ok (!$@);
+		ok ($@ == '');
 		$v->check('2014/01/01');
 		eval { $v->trim->isDate->isAfter('2013/12/28')->isBefore('2014/01/02'); };
-		ok (!$@);
+		ok ($@ == '');
 	};
 	subtest 'failure' => sub {
 		$v->check('   aaa   ');

@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use Encode qw/decode_utf8/;
 use Time::Piece;
+use Carp qw/croak/;
 
 sub new {
 	my $class = shift;
@@ -29,7 +30,7 @@ sub error {
 
 	my $e = Validator::Chained::Exception->new;
 	$e->message($msg);
-	die $e;
+	croak $e;
 }
 
 sub trim {
