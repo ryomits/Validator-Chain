@@ -1,5 +1,5 @@
 use strict;
-use Test::More tests => 13;
+use Test::More tests => 14;
 
 use Validator::Chained;
 
@@ -233,6 +233,29 @@ subtest 'validate isBefore' => sub {
 		like ($@->message, qr/Invalid/);
 		eval { $v->check('2014-01-01')->isBefore('2013-12-28'); };
 		like ($@->message, qr/Invalid/);
+	};
+};
+
+subtest 'validate isEmail' => sub {
+	subtest 'success' => sub {
+		eval { $v->check('foo@bar.com')->isEmail };
+		ok ($@ == '');
+		eval { $v->check('x@x.x')->isEmail };
+		ok ($@ == '');
+		eval { $v->check('foo@bar.com.au')->isEmail };
+		ok ($@ == '');
+		eval { $v->check('foo+bar@bar.com')->isEmail };
+		ok ($@ == '');
+		eval { $v->check('ryomelo300@gmail.com')->isEmail };
+		ok ($@ == '');
+	};
+	subtest 'failure' => sub {
+		eval { $v->check('invalidemail@')->isEmail };
+		like($@->message, qr/Invalid/);
+		eval { $v->check('invalid.com')->isEmail };
+		like($@->message, qr/Invalid/);
+		eval { $v->check('@invalid.com')->isEmail };
+		like($@->message, qr/Invalid/);
 	};
 };
 

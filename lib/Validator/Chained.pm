@@ -26,10 +26,11 @@ sub check {
 }
 
 sub error {
-	my ($self, $msg) = @_;
+	my $self = shift;
+	my $msg = shift;
 
 	my $e = Validator::Chained::Exception->new;
-	$e->message($msg);
+	$e->message(sprintf($msg, @_));
 	croak $e;
 }
 
@@ -68,6 +69,24 @@ sub isNumeric {
 	return $self;
 }
 
+sub isHexadecimal {
+	my $self = shift;
+
+	unless ($self->{str} =~ /^[0-9a-fA-F]+$/) {
+		$self->error($self->{msgs}->{isHexadecimal} // $self->{msg} // 'Invalid hexadecimal');
+	}
+	return $self;
+}
+
+sub isHexColor {
+	my $self = shift;
+
+	unless ($self->{str} =~ /^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/) {
+		$self->error($self->{msgs}->{isHexColor} // $self->{msg} // 'Invalid hexcolor');
+	}
+	return $self;
+}
+
 sub notNull {
 	my $self = shift;
 
@@ -99,7 +118,7 @@ sub equals {
 	my ($self, $equals) = @_;
 
 	unless ($self->{str} eq $equals) {
-		$self->error($self->{msgs}->{equals} // $self->{msg} // 'Not equal');
+		$self->error($self->{msgs}->{equals} // $self->{msg} // 'Not equal', $equals);
 	}
 	return $self;
 }
@@ -108,7 +127,7 @@ sub containes {
 	my ($self, $pattern) = @_;
 
 	unless ($self->{str} =~ /$pattern/) {
-		$self->error($self->{msgs}->{containes} // $self->{msg} // 'Invalid characters');
+		$self->error($self->{msgs}->{containes} // $self->{msg} // 'Invalid characters', $pattern);
 	}
 	return $self;
 }
@@ -118,10 +137,10 @@ sub byteLen {
 
 	my $length = length $self->{str};
 	if ($length < $min) {
-		$self->error($self->{msgs}->{byteLen} // $self->{msg} // 'String is too small');
+		$self->error($self->{msgs}->{byteLen} // $self->{msg} // 'String is too small', $min, $max);
 	}
 	if (defined $max && $length > $max) {
-		$self->error($self->{msgs}->{byteLen} // $self->{msg} // 'String is too large');
+		$self->error($self->{msgs}->{byteLen} // $self->{msg} // 'String is too large', $min, $max);
 	}
 	return $self;
 }
@@ -131,10 +150,10 @@ sub len {
 
 	my $length = length decode_utf8($self->{str});
 	if ($length < $min) {
-		$self->error($self->{msgs}->{len} // $self->{msg} // 'String is too small');
+		$self->error($self->{msgs}->{len} // $self->{msg} // 'String is too small', $min, $max);
 	}
 	if (defined $max && $length > $max) {
-		$self->error($self->{msgs}->{len} // $self->{msg} // 'String is too large');
+		$self->error($self->{msgs}->{len} // $self->{msg} // 'String is too large', $min, $max);
 	}
 	return $self;
 }
@@ -165,7 +184,7 @@ sub isAfter {
 	$compDate = $self->_fixDate($compDate);
 
 	unless ($origDate >= $compDate) {
-		$self->error($self->{msgs}->{isAfter} // $self->{msg} // 'Invalid date');
+		$self->error($self->{msgs}->{isAfter} // $self->{msg} // 'Invalid date', $compDate);
 	}
 	return $self;
 }
@@ -178,7 +197,7 @@ sub isBefore {
 	$compDate = $self->_fixDate($compDate);
 
 	unless ($origDate <= $compDate) {
-		$self->error($self->{msgs}->{isBefore} // $self->{msg} // 'Invalid date');
+		$self->error($self->{msgs}->{isBefore} // $self->{msg} // 'Invalid date', $compDate);
 	}
 	return $self;
 }
@@ -190,6 +209,15 @@ sub _fixDate {
 		$date = sprintf("%04d%02d%02d", $1, $2, $3);
 	}
 	return $date;
+}
+
+sub isEmail {
+	my $self = shift;
+
+	unless ($self->{str} =~ /^(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\@(?:(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!\.)){0,61}[a-zA-Z0-9]?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!$)){0,61}[a-zA-Z0-9]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))$/) {
+		$self->error($self->{msgs}->{isEmail} // $self->{msg} // 'Invalid email');
+	}
+	return $self;
 }
 
 package Validator::Chained::Exception;

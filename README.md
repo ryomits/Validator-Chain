@@ -21,6 +21,8 @@ List of validation methods
 * isAlpha
 * isAlphanumeric
 * isNumeric
+* isHexadecimal
+* isHexColor
 * notNull
 * isNull
 * notEmpty
@@ -31,3 +33,4 @@ List of validation methods
 * isDate
 * isAfter
 * isBefore
+* isEmail

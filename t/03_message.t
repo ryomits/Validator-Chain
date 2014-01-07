@@ -28,6 +28,20 @@ subtest 'validate message per method' => sub {
 	like ($@->message, qr/数値を入力してください/);
 
 	eval {
+		$v->check('abcg', {
+			isHexadecimal => '16進数を入力してください',
+		})->isHexadecimal;
+	};
+	like ($@->message, qr/16進数を入力してください/);
+
+	eval {
+		$v->check('abcg', {
+			isHexColor => '16進数を入力してください',
+		})->isHexColor;
+	};
+	like ($@->message, qr/16進数を入力してください/);
+
+	eval {
 		$v->check(undef, {
 			notNull => '必須項目です',
 		})->notNull;
@@ -141,6 +155,16 @@ subtest 'validate message a method' => sub {
 	like ($@->message, qr/数値を入力してください/);
 
 	eval {
+		$v->check('abcg', '16進数を入力してください')->isHexadecimal;
+	};
+	like ($@->message, qr/16進数を入力してください/);
+
+	eval {
+		$v->check('abcg', '16進数を入力してください')->isHexColor;
+	};
+	like ($@->message, qr/16進数を入力してください/);
+
+	eval {
 		$v->check(undef, '必須項目です')->notNull;
 	};
 	like ($@->message, qr/必須項目です/);
@@ -159,11 +183,6 @@ subtest 'validate message a method' => sub {
 		$v->check('aaa', 'aaaを入力してください')->equals('bbb');
 	};
 	like ($@->message, qr/aaaを入力してください/);
-
-	eval {
-		$v->check('aaa', 'aaを入力してください')->containes('bb');
-	};
-	like ($@->message, qr/aaを入力してください/);
 
 	eval {
 		$v->check('aaa', 'aaを入力してください')->containes('bb');
@@ -204,6 +223,11 @@ subtest 'validate message a method' => sub {
 		$v->check('20140101', '正しい日付を入力してください')->isBefore(20131228);
 	};
 	like ($@->message, qr/正しい日付を入力してください/);
+
+	eval {
+		$v->check('invalid', '正しいEmailを入力してください')->isEmail;
+	};
+	like ($@->message, qr/正しいEmailを入力してください/);
 };
 
 subtest 'validate message chained method' => sub {
