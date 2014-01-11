@@ -1,4 +1,4 @@
-package Validator::Chained;
+package Validator::Chain;
 use strict;
 use warnings;
 use Encode qw/decode_utf8/;
@@ -29,7 +29,7 @@ sub error {
 	my $self = shift;
 	my $msg = shift;
 
-	my $e = Validator::Chained::Exception->new;
+	my $e = Validator::Chain::Exception->new;
 	$e->message(sprintf($msg, @_));
 	croak $e;
 }
@@ -220,7 +220,7 @@ sub isEmail {
 	return $self;
 }
 
-package Validator::Chained::Exception;
+package Validator::Chain::Exception;
 
 sub new {
 	my $class = shift;

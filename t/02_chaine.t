@@ -1,9 +1,9 @@
 use strict;
 use Test::More tests => 1;
 
-use Validator::Chained;
+use Validator::Chain;
 
-my $v = Validator::Chained->new;
+my $v = Validator::Chain->new;
 
 subtest 'validate chained' => sub {
 	subtest 'success' => sub {

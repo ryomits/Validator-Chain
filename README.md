@@ -5,9 +5,9 @@ Validator such as Node-Validator.
 Example
 ===
 ```
-use Validator::Chained;
+use Validator::Chain;
 
-my $v = Validator::Chained->new;
+my $v = Validator::Chain->new;
 eval {
 	$v->check('  aaa  ')->trim->isAlpha->len(5, 6);
 };
