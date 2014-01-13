@@ -85,13 +85,6 @@ subtest 'validate message per method' => sub {
 
 	eval {
 		$v->check('aaaaa', {
-			byteLen => '二文字以上四文字以内で入力してください',
-		})->byteLen(2, 4);
-	};
-	like ($@->message, qr/二文字以上四文字以内で入力してください/);
-
-	eval {
-		$v->check('aaaaa', {
 			len => '二文字以上四文字以内で入力してください',
 		})->len(2, 4);
 	};
@@ -188,11 +181,6 @@ subtest 'validate message a method' => sub {
 		$v->check('aaa', 'aaを入力してください')->containes('bb');
 	};
 	like ($@->message, qr/aaを入力してください/);
-
-	eval {
-		$v->check('aaaaa', '二文字以上四文字以内で入力してください')->byteLen(2, 4);
-	};
-	like ($@->message, qr/二文字以上四文字以内で入力してください/);
 
 	eval {
 		$v->check('aaaaa', '二文字以上四文字以内で入力してください')->len(2, 4);

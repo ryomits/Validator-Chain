@@ -28,7 +28,6 @@ List of validation methods
 * notEmpty
 * equals
 * containes
-* byteLen
 * len
 * isDate
 * isAfter

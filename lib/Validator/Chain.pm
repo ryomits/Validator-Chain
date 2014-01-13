@@ -1,7 +1,7 @@
 package Validator::Chain;
 use strict;
 use warnings;
-use Encode qw/decode_utf8/;
+use Encode;
 use Time::Piece;
 use Carp qw/croak/;
 
@@ -13,7 +13,8 @@ sub new {
 sub check {
 	my ($self, $str, $msg) = @_;
 
-	$self->{str} = $str // '';
+	$str = $str // '';
+	$self->{str} = Encode::is_utf8($str) ? $str : decode_utf8($str);
 	if (ref $msg) {
 		$self->{msgs} = $msg;
 		$self->{msg} = undef;
@@ -132,23 +133,10 @@ sub containes {
 	return $self;
 }
 
-sub byteLen {
-	my ($self, $min, $max) = @_;
-
-	my $length = length $self->{str};
-	if ($length < $min) {
-		$self->error($self->{msgs}->{byteLen} // $self->{msg} // 'String is too small', $min, $max);
-	}
-	if (defined $max && $length > $max) {
-		$self->error($self->{msgs}->{byteLen} // $self->{msg} // 'String is too large', $min, $max);
-	}
-	return $self;
-}
-
 sub len {
 	my ($self, $min, $max) = @_;
 
-	my $length = length decode_utf8($self->{str});
+	my $length = length $self->{str};
 	if ($length < $min) {
 		$self->error($self->{msgs}->{len} // $self->{msg} // 'String is too small', $min, $max);
 	}

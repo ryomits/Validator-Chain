@@ -1,5 +1,5 @@
 use strict;
-use Test::More tests => 14;
+use Test::More tests => 13;
 
 use Validator::Chain;
 
@@ -128,26 +128,6 @@ subtest 'validate containes' => sub {
 		like ($@->message, qr/Invalid/);
 		eval { $v->containes('aaaa'); };
 		like ($@->message, qr/Invalid/);
-	};
-};
-
-subtest 'validator byteLen' => sub {
-	$v->check('あいう');
-	subtest 'success' => sub {
-		eval { $v->byteLen(3); };
-		ok ($@ == '');
-		eval { $v->byteLen(3, 9); };
-		ok ($@ == '');
-		eval { $v->byteLen(9, 9); };
-		ok ($@ == '');
-	};
-	subtest 'failure' => sub {
-		eval { $v->byteLen(10); };
-		like ($@->message, qr/small/);
-		eval { $v->byteLen(10, 15); };
-		like ($@->message, qr/small/);
-		eval { $v->byteLen(1, 2); };
-		like ($@->message, qr/large/);
 	};
 };
 
