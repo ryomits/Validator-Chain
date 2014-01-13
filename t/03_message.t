@@ -1,9 +1,9 @@
 use strict;
 use Test::More tests => 3;
 
-use Validator::Chain;
+use Validator::Chains;
 
-my $v = Validator::Chain->new;
+my $v = Validator::Chains->new;
 
 subtest 'validate message per method' => sub {
 	eval {
